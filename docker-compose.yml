@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bebouncepadel-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-bouncepadel}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-bouncepadel123}
+      POSTGRES_DB: ${DB_NAME:-bouncepadel}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-bouncepadel} -d ${DB_NAME:-bouncepadel}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
