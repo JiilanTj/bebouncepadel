@@ -32,7 +32,9 @@ app.use(
           "https://demobouncepadelvtwo.sapacode.id",
           "http://demobouncepadelvtwo.sapacode.id",
           "https://bouncepadel.id",
-          "http://bouncepadel.id/"
+          "http://bouncepadel.id/",
+          "http://www.bouncepadel.id/",
+          "https://www.bouncepadel.id/"
         ];
       // If origin is undefined (non-browser), allow all
       if (!origin) return allowed[0];
