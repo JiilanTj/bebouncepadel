@@ -105,7 +105,7 @@ export async function getAllNotifications(c: Context) {
     // Filter by user (null userId = broadcast to all)
     if (user?.userId) {
       conditions.push(
-        sql`${notifications.userId} IS NULL OR ${notifications.userId} = ${user.userId}`
+        sql`(${notifications.userId} IS NULL OR ${notifications.userId} = ${user.userId})`
       );
     }
 
@@ -136,7 +136,7 @@ export async function getAllNotifications(c: Context) {
         and(
           eq(notifications.isRead, false),
           user?.userId
-            ? sql`${notifications.userId} IS NULL OR ${notifications.userId} = ${user.userId}`
+            ? sql`(${notifications.userId} IS NULL OR ${notifications.userId} = ${user.userId})`
             : undefined
         )
       );
@@ -167,7 +167,7 @@ export async function getUnreadCount(c: Context) {
 
     if (user?.userId) {
       conditions.push(
-        sql`${notifications.userId} IS NULL OR ${notifications.userId} = ${user.userId}`
+        sql`(${notifications.userId} IS NULL OR ${notifications.userId} = ${user.userId})`
       );
     }
 
