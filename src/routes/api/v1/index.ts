@@ -29,7 +29,7 @@ const apiInfoHandler = (c: Context) => {
     name: "bebouncepadel API",
     version: "v1.0.0",
     baseUrl: "/api/v1",
-    endpoints: ["/auth", "/upload", "/product-categories", "/menu-categories", "/products", "/menus", "/tables", "/transactions", "/product-sells", "/product-rents", "/inventories", "/health", "/bookings", "/stats", "/order-requests", "/notifications"],
+    endpoints: ["/auth", "/upload", "/product-categories", "/menu-categories", "/products", "/menus", "/tables", "/transactions", "/product-sells", "/product-rents", "/inventories", "/health", "/bookings", "/stats", "/order-requests", "/notifications", "/courts/sync-ayo", "/courts/ayo-fields"],
   }, "Welcome to bebouncepadel API v1");
 };
 

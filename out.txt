@@ -1,0 +1,20 @@
+String to sign: token=0amBvABpjtDnkbPu9rryELXlL7gJm1elfMd5kPoRaHFEa1w7rBztdmbdEyfJ
+Payload: {
+  [0mtoken[2m:[0m [0m[32m[0m[32m"0amBvABpjtDnkbPu9rryELXlL7gJm1elfMd5kPoRaHFEa1w7rBztdmbdEyfJ"[0m[0m[0m[2m,[0m
+  [0msignature[2m:[0m [0m[32m[0m[32m"cd927b9f4294dfd75d11028ddb4a2684a6f9747b2965300109a3c0a33cd124af6cfd30d3e12988d15577f7b3c67f8467a9124406995e6c4f07d85c39faf9a6a8"[0m[0m[0m[2m,[0m
+}
+Success: {
+  [0merror[2m:[0m [0m[33mfalse[0m[0m[2m,[0m
+  [0mstatus_code[2m:[0m [0m[33m200[0m[0m[2m,[0m
+  [0mdata[2m:[0m [
+    {
+      [0mid[2m:[0m [0m[33m1002[0m[0m[2m,[0m
+      [0mname[2m:[0m [0m[32m[0m[32m"Court 1"[0m[0m[0m[2m,[0m
+      [0mstatus[2m:[0m [0m[32m[0m[32m"ACTIVE"[0m[0m[0m[2m,[0m
+      [0mis_active[2m:[0m [0m[33m1[0m[0m[2m,[0m
+      [0mis_permanent_active[2m:[0m [0m[33m1[0m[0m[2m,[0m
+      [0msport_name[2m:[0m [0m[32m[0m[32m"Padel"[0m[0m[0m[2m,[0m
+    }
+  ][0m[2m,[0m
+  [0msignature[2m:[0m [0m[32m[0m[32m"310ccb0659f5637b717eb7e93e023fcb746d3bc4910be358c331c30711743ce3ca9213f0fbd7b12791d133b0a1e5f9707bada4738476c8c1ac36aee2d72a0e10"[0m[0m[0m[2m,[0m
+}
