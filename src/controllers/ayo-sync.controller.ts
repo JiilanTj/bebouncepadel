@@ -137,3 +137,44 @@ export const syncCourtsWithAyo = async (c: Context) => {
         return error(c, `Failed to sync courts with Ayo: ${errorMessage}`, 500);
     }
 };
+
+/**
+ * PATCH /courts/:id/map-ayo
+ *
+ * Manually maps an internal court to an Ayo.co.id venue field.
+ * Body: { ayoFieldId: number | string }
+ */
+export const mapAyoField = async (c: Context) => {
+    try {
+        const courtId = c.req.param("id");
+        const body = await c.req.json();
+
+        if (!body.ayoFieldId) {
+            return error(c, "ayoFieldId is required in the request body", 400);
+        }
+
+        // Validate court exists
+        const existingCourt = await db.select().from(courts).where(eq(courts.id, courtId));
+        if (existingCourt.length === 0) {
+            return error(c, "Court not found", 404);
+        }
+
+        // Update ayoFieldId
+        const [updatedCourt] = await db
+            .update(courts)
+            .set({
+                ayoFieldId: String(body.ayoFieldId),
+                updatedAt: new Date()
+            })
+            .where(eq(courts.id, courtId))
+            .returning();
+
+        logger.info({ courtId, ayoFieldId: body.ayoFieldId }, "Manually mapped court to Ayo field");
+
+        return success(c, updatedCourt, "Successfully mapped court to Ayo field");
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        logger.error({ err }, "Failed to manually map court");
+        return error(c, `Failed to map court: ${errorMessage}`, 500);
+    }
+};

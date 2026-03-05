@@ -7,7 +7,7 @@ import {
     updateCourt,
     deleteCourt,
 } from "../controllers/courts.controller";
-import { syncCourtsWithAyo, getAyoFieldsList } from "../controllers/ayo-sync.controller";
+import { syncCourtsWithAyo, getAyoFieldsList, mapAyoField } from "../controllers/ayo-sync.controller";
 import { verifyTokenMiddleware, requireRole, verifyOptionalTokenMiddleware } from "../middleware/auth.middleware";
 import { Role } from "../db/schema";
 
@@ -27,6 +27,14 @@ courtsRoutes.post(
     verifyTokenMiddleware,
     requireRole([Role.OWNER, Role.ADMIN]),
     syncCourtsWithAyo
+);
+
+// Protected: Manually map an internal court to an Ayo.co.id field (Owner/Admin)
+courtsRoutes.patch(
+    "/:id/map-ayo",
+    verifyTokenMiddleware,
+    requireRole([Role.OWNER, Role.ADMIN]),
+    mapAyoField
 );
 
 // Public: List courts (Admin aware)
