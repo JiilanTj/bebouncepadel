@@ -80,7 +80,11 @@ export async function ayoRequest<T = unknown>(
 
     const url = `${AYO_BASE_URL}${endpoint}`;
 
-    logger.info({ url, method, payload: Object.keys(payload) }, "Ayo API request");
+    const finalUrl = method === "GET"
+        ? `${url}?${Object.keys(payload).map(k => `${k}=${encodeURIComponent(String(payload[k]))}`).join('&')}`
+        : url;
+
+    logger.info({ url: finalUrl, method, payload: Object.keys(payload) }, "Ayo API request");
 
     try {
         const response = await axios({
@@ -90,7 +94,7 @@ export async function ayoRequest<T = unknown>(
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            data: payload,
+            ...(method === "GET" ? { params: payload } : { data: payload })
         });
 
         const data = response.data as AyoApiResponse<T>;

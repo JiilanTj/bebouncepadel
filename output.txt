@@ -1,0 +1,9 @@
+Fetching bookings from Ayo API...
+[2026-03-06 21:21:44.670 +0700] [32mINFO[39m: [36mAyo API request[39m
+    [35menv[39m: "development"
+    [35murl[39m: "https://sandbox.ayodev.xyz/api/v2/third-party/list-bookings/goilM13uFh?token=0amBvABpjtDnkbPu9rryELXlL7gJm1elfMd5kPoRaHFEa1w7rBztdmbdEyfJ&signature=cd927b9f4294dfd75d11028ddb4a2684a6f9747b2965300109a3c0a33cd124af6cfd30d3e12988d15577f7b3c67f8467a9124406995e6c4f07d85c39faf9a6a8"
+    [35mmethod[39m: "GET"
+    [35mpayload[39m: [
+      "token",
+      "signature"
+    ]

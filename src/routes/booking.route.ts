@@ -8,6 +8,7 @@ import {
     completeBooking,
     getCourtAvailability
 } from "../controllers/booking.controller.js";
+import { syncBookingsWithAyo } from "../controllers/ayo-sync.controller.js";
 import { verifyTokenMiddleware, requireRole } from "../middleware/auth.middleware.js";
 import { Role } from "../db/schema.js";
 
@@ -22,5 +23,6 @@ bookingRoutes.get("/", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMI
 bookingRoutes.get("/:id", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]), getBookingById);
 bookingRoutes.patch("/:id/cancel", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN]), cancelBooking);
 bookingRoutes.patch("/:id/complete", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]), completeBooking);
+bookingRoutes.post("/sync-ayo", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN]), syncBookingsWithAyo);
 
 export default bookingRoutes;

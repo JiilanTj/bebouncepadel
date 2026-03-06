@@ -34,7 +34,7 @@ const apiInfoHandler = (c: Context) => {
       "/products", "/menus", "/tables", "/transactions", "/product-sells",
       "/product-rents", "/inventories", "/health", "/bookings", "/stats",
       "/order-requests", "/notifications", "/courts/sync-ayo", "/courts/ayo-fields",
-      "/courts/:id/map-ayo"
+      "/courts/:id/map-ayo", "/bookings/sync-ayo"
     ],
   }, "Welcome to bebouncepadel API v1");
 };
