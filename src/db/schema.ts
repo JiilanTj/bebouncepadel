@@ -4,6 +4,7 @@ import { relations } from "drizzle-orm";
 export const Role = {
   OWNER: "OWNER",
   ADMIN: "ADMIN",
+  INPUTER: "INPUTER",
   KASIR: "KASIR",
 } as const;
 
@@ -15,7 +16,7 @@ export const users = pgTable("users", {
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: text("password").notNull(),
-  role: text("role", { enum: ["OWNER", "ADMIN", "KASIR"] })
+  role: text("role", { enum: ["OWNER", "ADMIN", "INPUTER", "KASIR"] })
     .notNull()
     .default("ADMIN"),
   createdAt: timestamp("created_at", { withTimezone: true })

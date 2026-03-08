@@ -19,7 +19,7 @@ const productSellRoutes = new Hono();
 productSellRoutes.use(verifyTokenMiddleware);
 
 // All staff can read sell records
-const allStaffAccess = requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]);
+const allStaffAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]);
 
 productSellRoutes.get("/", allStaffAccess, getAllSellRecords);
 productSellRoutes.get("/:id", allStaffAccess, getSellRecordById);

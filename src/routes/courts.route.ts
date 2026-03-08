@@ -47,7 +47,7 @@ courtsRoutes.get("/:id", verifyOptionalTokenMiddleware, getCourtById);
 courtsRoutes.post(
     "/",
     verifyTokenMiddleware,
-    requireRole([Role.OWNER, Role.ADMIN]),
+    requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]),
     createCourt
 );
 
@@ -55,7 +55,7 @@ courtsRoutes.post(
 courtsRoutes.put(
     "/:id",
     verifyTokenMiddleware,
-    requireRole([Role.OWNER, Role.ADMIN]),
+    requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]),
     updateCourt
 );
 

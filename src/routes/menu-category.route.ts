@@ -20,34 +20,35 @@ const menuCategoryRoutes = new Hono();
 menuCategoryRoutes.get("/", getAllMenuCategories);
 menuCategoryRoutes.get("/:id", getMenuCategoryById);
 
-// Protected routes (OWNER & ADMIN only)
-const adminOnly = requireRole([Role.OWNER, Role.ADMIN]);
+// Protected routes
+const manageAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]);
+const deleteAccess = requireRole([Role.OWNER, Role.ADMIN]);
 
 menuCategoryRoutes.post(
   "/",
   verifyTokenMiddleware,
-  adminOnly,
+  manageAccess,
   createMenuCategory
 );
 
 menuCategoryRoutes.put(
   "/:id",
   verifyTokenMiddleware,
-  adminOnly,
+  manageAccess,
   updateMenuCategory
 );
 
 menuCategoryRoutes.delete(
   "/:id",
   verifyTokenMiddleware,
-  adminOnly,
+  deleteAccess,
   deleteMenuCategory
 );
 
 menuCategoryRoutes.patch(
   "/:id/activate",
   verifyTokenMiddleware,
-  adminOnly,
+  manageAccess,
   activateMenuCategory
 );
 

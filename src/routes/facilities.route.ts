@@ -22,7 +22,7 @@ facilitiesRoutes.get("/:id", verifyTokenMiddleware, getFacilityById);
 facilitiesRoutes.post(
     "/",
     verifyTokenMiddleware,
-    requireRole([Role.OWNER, Role.ADMIN]),
+    requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]),
     createFacility
 );
 
@@ -30,7 +30,7 @@ facilitiesRoutes.post(
 facilitiesRoutes.put(
     "/:id",
     verifyTokenMiddleware,
-    requireRole([Role.OWNER, Role.ADMIN]),
+    requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]),
     updateFacility
 );
 

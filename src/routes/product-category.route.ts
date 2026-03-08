@@ -20,34 +20,35 @@ const productCategoryRoutes = new Hono();
 productCategoryRoutes.get("/", getAllProductCategories);
 productCategoryRoutes.get("/:id", getProductCategoryById);
 
-// Protected routes (OWNER & ADMIN only)
-const adminOnly = requireRole([Role.OWNER, Role.ADMIN]);
+// Protected routes
+const manageAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]);
+const deleteAccess = requireRole([Role.OWNER, Role.ADMIN]);
 
 productCategoryRoutes.post(
   "/",
   verifyTokenMiddleware,
-  adminOnly,
+  manageAccess,
   createProductCategory
 );
 
 productCategoryRoutes.put(
   "/:id",
   verifyTokenMiddleware,
-  adminOnly,
+  manageAccess,
   updateProductCategory
 );
 
 productCategoryRoutes.delete(
   "/:id",
   verifyTokenMiddleware,
-  adminOnly,
+  deleteAccess,
   deleteProductCategory
 );
 
 productCategoryRoutes.patch(
   "/:id/activate",
   verifyTokenMiddleware,
-  adminOnly,
+  manageAccess,
   activateProductCategory
 );
 

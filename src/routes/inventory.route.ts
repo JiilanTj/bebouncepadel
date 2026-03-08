@@ -17,8 +17,9 @@ import { Role } from "../db/schema.js";
 const inventoryRoutes = new Hono();
 
 // Role-based access control
-const ownerAdminAccess = requireRole([Role.OWNER, Role.ADMIN]);
-const allStaffAccess = requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]);
+const deleteAccess = requireRole([Role.OWNER, Role.ADMIN]);
+const manageAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]);
+const allStaffAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]);
 
 // All routes require authentication
 inventoryRoutes.use(verifyTokenMiddleware);
@@ -27,10 +28,11 @@ inventoryRoutes.use(verifyTokenMiddleware);
 inventoryRoutes.get("/", allStaffAccess, getAllInventories);
 inventoryRoutes.get("/:id", allStaffAccess, getInventoryById);
 
-// OWNER/ADMIN can create, update, adjust, and delete
-inventoryRoutes.post("/", ownerAdminAccess, createInventory);
-inventoryRoutes.put("/:id", ownerAdminAccess, updateInventory);
-inventoryRoutes.patch("/:id/adjust", ownerAdminAccess, adjustInventoryStock);
-inventoryRoutes.delete("/:id", ownerAdminAccess, deleteInventory);
+// OWNER/ADMIN/INPUTER can create, update, adjust
+inventoryRoutes.post("/", manageAccess, createInventory);
+inventoryRoutes.put("/:id", manageAccess, updateInventory);
+inventoryRoutes.patch("/:id/adjust", manageAccess, adjustInventoryStock);
+// Delete is OWNER/ADMIN only
+inventoryRoutes.delete("/:id", deleteAccess, deleteInventory);
 
 export default inventoryRoutes;

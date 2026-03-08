@@ -22,16 +22,17 @@ const productRoutes = new Hono();
 
 // Read-only access for KASIR (and implicitly OWNER/ADMIN too as they should be included)
 // But requireRole takes an array of allowed roles.
-const readAccess = requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]);
-const writeAccess = requireRole([Role.OWNER, Role.ADMIN]);
+const readAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]);
+const manageAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER]);
+const deleteAccess = requireRole([Role.OWNER, Role.ADMIN]);
 
 // Public routes - no authentication required
 productRoutes.get("/", getAllProducts);
 productRoutes.get("/:id", getProductById);
 
-productRoutes.post("/", verifyTokenMiddleware, writeAccess, createProduct);
-productRoutes.put("/:id", verifyTokenMiddleware, writeAccess, updateProduct);
-productRoutes.delete("/:id", verifyTokenMiddleware, writeAccess, deleteProduct);
-productRoutes.patch("/:id/activate", verifyTokenMiddleware, writeAccess, activateProduct);
+productRoutes.post("/", verifyTokenMiddleware, manageAccess, createProduct);
+productRoutes.put("/:id", verifyTokenMiddleware, manageAccess, updateProduct);
+productRoutes.delete("/:id", verifyTokenMiddleware, deleteAccess, deleteProduct);
+productRoutes.patch("/:id/activate", verifyTokenMiddleware, manageAccess, activateProduct);
 
 export default productRoutes;

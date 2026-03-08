@@ -19,14 +19,15 @@ const transactionRoutes = new Hono();
 // Role-based access control
 const ownerAdminAccess = requireRole([Role.OWNER, Role.ADMIN]);
 const kasirAccess = requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]);
+const readAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]);
 
 // All transaction routes require authentication
 transactionRoutes.use(verifyTokenMiddleware);
 
-// KASIR can create and read transactions
+// KASIR can create and read transactions, INPUTER can only read
 transactionRoutes.post("/", kasirAccess, createTransaction);
-transactionRoutes.get("/", kasirAccess, getAllTransactions);
-transactionRoutes.get("/:id", kasirAccess, getTransactionById);
+transactionRoutes.get("/", readAccess, getAllTransactions);
+transactionRoutes.get("/:id", readAccess, getTransactionById);
 
 // Only OWNER/ADMIN can cancel and complete transactions
 transactionRoutes.patch("/:id/cancel", ownerAdminAccess, cancelTransaction);

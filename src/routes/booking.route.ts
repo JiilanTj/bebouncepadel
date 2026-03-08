@@ -19,8 +19,8 @@ bookingRoutes.post("/", createBooking);
 bookingRoutes.get("/availability/:id", getCourtAvailability);
 
 // Protected routes
-bookingRoutes.get("/", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]), getAllBookings);
-bookingRoutes.get("/:id", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]), getBookingById);
+bookingRoutes.get("/", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]), getAllBookings);
+bookingRoutes.get("/:id", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]), getBookingById);
 bookingRoutes.patch("/:id/cancel", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN]), cancelBooking);
 bookingRoutes.patch("/:id/complete", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]), completeBooking);
 bookingRoutes.post("/sync-ayo", verifyTokenMiddleware, requireRole([Role.OWNER, Role.ADMIN]), syncBookingsWithAyo);

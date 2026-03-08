@@ -21,7 +21,7 @@ const productRentRoutes = new Hono();
 productRentRoutes.use(verifyTokenMiddleware);
 
 // All staff can read rent records
-const allStaffAccess = requireRole([Role.OWNER, Role.ADMIN, Role.KASIR]);
+const allStaffAccess = requireRole([Role.OWNER, Role.ADMIN, Role.INPUTER, Role.KASIR]);
 
 // OWNER/ADMIN can return rentals
 const ownerAdminAccess = requireRole([Role.OWNER, Role.ADMIN]);
