@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, varchar, boolean, index, decimal, integer } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, varchar, boolean, index, decimal, integer, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 export const Role = {
@@ -762,6 +762,52 @@ export const bookingsRelations = relations(bookings, ({ one }) => ({
 
 export const courtsRelations = relations(courts, ({ many }) => ({
   bookings: many(bookings),
+}));
+
+// Sync History Enums
+export const SyncType = {
+  COURT: "COURT",
+  BOOKING: "BOOKING",
+} as const;
+
+export type SyncType = (typeof SyncType)[keyof typeof SyncType];
+
+export const SyncStatus = {
+  SUCCESS: "SUCCESS",
+  FAILED: "FAILED",
+} as const;
+
+export type SyncStatus = (typeof SyncStatus)[keyof typeof SyncStatus];
+
+// Sync Histories table
+export const syncHistories = pgTable(
+  "sync_histories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    type: text("type", { enum: ["COURT", "BOOKING"] }).notNull(),
+    status: text("status", { enum: ["SUCCESS", "FAILED"] }).notNull(),
+    summary: text("summary").notNull(),
+    details: jsonb("details"),
+    triggeredBy: uuid("triggered_by").references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    typeIdx: index("sync_histories_type_idx").on(table.type),
+    statusIdx: index("sync_histories_status_idx").on(table.status),
+    createdAtIdx: index("sync_histories_created_at_idx").on(table.createdAt),
+  })
+);
+
+export type SyncHistory = typeof syncHistories.$inferSelect;
+export type NewSyncHistory = typeof syncHistories.$inferInsert;
+
+export const syncHistoriesRelations = relations(syncHistories, ({ one }) => ({
+  triggerer: one(users, {
+    fields: [syncHistories.triggeredBy],
+    references: [users.id],
+  }),
 }));
 
 // Order Request Status Enum

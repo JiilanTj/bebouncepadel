@@ -19,6 +19,7 @@ import bookingRoutes from "../../booking.route";
 import statsRoutes from "../../stats.route";
 import orderRequestRoutes from "../../order-request.route.js";
 import notificationRoutes from "../../notification.route.js";
+import syncHistoriesRoute from "../../sync-history.route.js";
 import { checkConnection } from "../../../db/index.js";
 import { success } from "../../../lib/index.js";
 
@@ -34,7 +35,7 @@ const apiInfoHandler = (c: Context) => {
       "/products", "/menus", "/tables", "/transactions", "/product-sells",
       "/product-rents", "/inventories", "/health", "/bookings", "/stats",
       "/order-requests", "/notifications", "/courts/sync-ayo", "/courts/ayo-fields",
-      "/courts/:id/map-ayo", "/bookings/sync-ayo"
+      "/courts/:id/map-ayo", "/bookings/sync-ayo", "/sync-history"
     ],
   }, "Welcome to bebouncepadel API v1");
 };
@@ -99,5 +100,6 @@ apiV1.route("/bookings", bookingRoutes);
 apiV1.route("/stats", statsRoutes);
 apiV1.route("/order-requests", orderRequestRoutes);
 apiV1.route("/notifications", notificationRoutes);
+apiV1.route("/sync-history", syncHistoriesRoute);
 
 export default apiV1;

@@ -2,7 +2,7 @@ import { type Context } from "hono";
 import { eq } from "drizzle-orm";
 
 import { db } from "../db";
-import { courts, bookings } from "../db/schema";
+import { courts, bookings, syncHistories, SyncType, SyncStatus } from "../db/schema";
 import { success, error } from "../lib";
 import { logger } from "../lib/logger";
 import { getVenueFields, getBookings, type AyoField } from "../lib/ayo-client";
@@ -22,6 +22,8 @@ interface SyncResult {
  */
 export const getAyoFieldsList = async (c: Context) => {
     try {
+        const user = c.get("user");
+
         logger.info("Fetching Ayo venue fields for mapping...");
         const ayoFields = await getVenueFields();
         return success(c, ayoFields, "Successfully fetched Ayo venue fields");
@@ -39,6 +41,7 @@ export const getAyoFieldsList = async (c: Context) => {
  * Matches by name (case-insensitive) and updates `ayo_field_id` in the courts table.
  */
 export const syncCourtsWithAyo = async (c: Context) => {
+    const user = c.get("user");
     try {
         // 1. Fetch fields from Ayo API
         logger.info("Starting court sync with Ayo.co.id...");
@@ -130,10 +133,33 @@ export const syncCourtsWithAyo = async (c: Context) => {
             "Court sync completed"
         );
 
+        // Map Sync History record
+        const summaryMsg = `Matched: ${result.synced.length}. Unmatched Ayo Fields: ${result.unmatched_ayo_fields.length}. Unmatched Internal Courts: ${result.unmatched_courts.length}`;
+        await db.insert(syncHistories).values({
+            type: SyncType.COURT,
+            status: SyncStatus.SUCCESS,
+            summary: summaryMsg,
+            details: result,
+            triggeredBy: user.id // using existing authenticated user ID from context
+        });
+
         return success(c, result, `Sync completed: ${result.synced.length} courts matched`);
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Unknown error";
         logger.error({ err }, "Failed to sync courts with Ayo");
+
+        try {
+            await db.insert(syncHistories).values({
+                type: SyncType.COURT,
+                status: SyncStatus.FAILED,
+                summary: errorMessage,
+                details: { stack: err instanceof Error ? err.stack : undefined },
+                triggeredBy: user?.id,
+            });
+        } catch (dbErr) {
+            logger.error({ dbErr }, "Failed to log Court Sync Error to sync_histories");
+        }
+
         return error(c, `Failed to sync courts with Ayo: ${errorMessage}`, 500);
     }
 };
@@ -186,6 +212,7 @@ export const mapAyoField = async (c: Context) => {
  * Defaults to fetching bookings for the next 30 days.
  */
 export const syncBookingsWithAyo = async (c: Context) => {
+    const user = c.get("user");
     try {
         const query = c.req.query();
 
@@ -280,13 +307,78 @@ export const syncBookingsWithAyo = async (c: Context) => {
             }
         }
 
+        const responseData = { newInserted, existingUpdated, skippedUnmapped };
         const resultStr = `Sync completed. Inserted: ${newInserted}, Updated: ${existingUpdated}, Skipped (Unmapped Court): ${skippedUnmapped}`;
-        logger.info({ newInserted, existingUpdated, skippedUnmapped }, "Booking sync finished");
+        logger.info(responseData, "Booking sync finished");
 
-        return success(c, { newInserted, existingUpdated, skippedUnmapped }, resultStr);
+        // Map Sync History record
+        await db.insert(syncHistories).values({
+            type: SyncType.BOOKING,
+            status: SyncStatus.SUCCESS,
+            summary: resultStr,
+            details: responseData,
+            triggeredBy: user.id // using existing authenticated user ID from context
+        });
+
+        return success(c, responseData, resultStr);
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Unknown error";
         logger.error({ err }, "Failed to sync bookings with Ayo");
+
+        try {
+            await db.insert(syncHistories).values({
+                type: SyncType.BOOKING,
+                status: SyncStatus.FAILED,
+                summary: errorMessage,
+                details: { stack: err instanceof Error ? err.stack : undefined },
+                triggeredBy: user?.id,
+            });
+        } catch (dbErr) {
+            logger.error({ dbErr }, "Failed to log Booking Sync Error to sync_histories");
+        }
+
         return error(c, `Failed to sync bookings with Ayo: ${errorMessage}`, 500);
+    }
+};
+
+/**
+ * GET /api/v1/sync-history
+ * 
+ * Fetches the paginated history of synchronization tasks.
+ */
+export const getSyncHistories = async (c: Context) => {
+    try {
+        const query = c.req.query();
+        const page = parseInt(query.page || "1");
+        const limit = parseInt(query.limit || "10");
+        const offset = (page - 1) * limit;
+
+        const histories = await db.query.syncHistories.findMany({
+            orderBy: (syncHistories, { desc }) => [desc(syncHistories.createdAt)],
+            limit,
+            offset,
+            with: {
+                triggerer: {
+                    columns: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    }
+                }
+            }
+        });
+
+        // Get total count for pagination metadata
+        const totalResult = await db.execute(`SELECT COUNT(*) FROM sync_histories`);
+        const total = parseInt(totalResult.rows[0]?.count as string || "0");
+        const totalPages = Math.ceil(total / limit);
+
+        const meta = { total, page, limit, totalPages };
+
+        return success(c, { histories, meta }, "Successfully fetched sync histories");
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        logger.error({ err }, "Failed to fetch sync histories");
+        return error(c, `Failed to fetch sync histories: ${errorMessage}`, 500);
     }
 };

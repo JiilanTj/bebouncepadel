@@ -1,5 +1,45 @@
 Fetching bookings from Ayo API...
-[2026-03-06 21:21:44.670 +0700] [32mINFO[39m: [36mAyo API request[39m
+[
+  {
+    "id": 6288,
+    "order_detail_id": 6288,
+    "booking_id": "BK/1183/260130/0000001",
+    "field_id": 1002,
+    "field_name": "Court 1",
+    "date": "2026-01-31",
+    "start_time": "06:00:00",
+    "end_time": "07:00:00",
+    "total_price": 350000,
+    "status": "FINISHED",
+    "user_id": 83751,
+    "booker_name": "Thomas ",
+    "booker_phone": "6284718278181",
+    "booker_email": "tms.ucic@gmail.com",
+    "booking_source": "order",
+    "note": null,
+    "created_at": "2026-01-30T01:47:36.000000Z"
+  },
+  {
+    "id": 6289,
+    "order_detail_id": 6289,
+    "booking_id": "BK/1183/260130/0000002",
+    "field_id": 1002,
+    "field_name": "Court 1",
+    "date": "2026-01-31",
+    "start_time": "07:00:00",
+    "end_time": "08:00:00",
+    "total_price": 350000,
+    "status": "FINISHED",
+    "user_id": 83751,
+    "booker_name": "Thomas ",
+    "booker_phone": "6284718278181",
+    "booker_email": "tms.ucic@gmail.com",
+    "booking_source": "order",
+    "note": null,
+    "created_at": "2026-01-30T01:47:36.000000Z"
+  }
+]
+[2026-03-08 13:36:31.961 +0700] [32mINFO[39m: [36mAyo API request[39m
     [35menv[39m: "development"
     [35murl[39m: "https://sandbox.ayodev.xyz/api/v2/third-party/list-bookings/goilM13uFh?token=0amBvABpjtDnkbPu9rryELXlL7gJm1elfMd5kPoRaHFEa1w7rBztdmbdEyfJ&signature=cd927b9f4294dfd75d11028ddb4a2684a6f9747b2965300109a3c0a33cd124af6cfd30d3e12988d15577f7b3c67f8467a9124406995e6c4f07d85c39faf9a6a8"
     [35mmethod[39m: "GET"
@@ -7,3 +47,50 @@ Fetching bookings from Ayo API...
       "token",
       "signature"
     ]
+[2026-03-08 13:36:32.452 +0700] [32mINFO[39m: [36mAyo API response[39m
+    [35menv[39m: "development"
+    [35mrawResponseBody[39m: {
+      "error": false,
+      "status_code": 200,
+      "data": [
+        {
+          "id": 6288,
+          "order_detail_id": 6288,
+          "booking_id": "BK/1183/260130/0000001",
+          "field_id": 1002,
+          "field_name": "Court 1",
+          "date": "2026-01-31",
+          "start_time": "06:00:00",
+          "end_time": "07:00:00",
+          "total_price": 350000,
+          "status": "FINISHED",
+          "user_id": 83751,
+          "booker_name": "Thomas ",
+          "booker_phone": "6284718278181",
+          "booker_email": "tms.ucic@gmail.com",
+          "booking_source": "order",
+          "note": null,
+          "created_at": "2026-01-30T01:47:36.000000Z"
+        },
+        {
+          "id": 6289,
+          "order_detail_id": 6289,
+          "booking_id": "BK/1183/260130/0000002",
+          "field_id": 1002,
+          "field_name": "Court 1",
+          "date": "2026-01-31",
+          "start_time": "07:00:00",
+          "end_time": "08:00:00",
+          "total_price": 350000,
+          "status": "FINISHED",
+          "user_id": 83751,
+          "booker_name": "Thomas ",
+          "booker_phone": "6284718278181",
+          "booker_email": "tms.ucic@gmail.com",
+          "booking_source": "order",
+          "note": null,
+          "created_at": "2026-01-30T01:47:36.000000Z"
+        }
+      ],
+      "signature": "15de2cabb100ba2c96e3300e1aa96eb1866095b74976209ea23005ace982a4d099ddf17b9858a3d8057f5fa81b5757cc22fc817d0dd3025526d5a4643813b3f2"
+    }
